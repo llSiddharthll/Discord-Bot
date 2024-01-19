@@ -38,7 +38,7 @@ class MyClient(discord.Client):
                 generated_text = output[0]["generated_text"]
             except:
                 generated_text = output[0]
-            output_index = generated_text.find("'outputs'")
+            output_index = generated_text.find("'outputs': {'text': '")
             code_index = generated_text.find("<|assistant|>")
 
             try:
