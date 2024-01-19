@@ -38,12 +38,12 @@ class MyClient(discord.Client):
                 generated_text = output[0]["generated_text"]
             except:
                 generated_text = output[0]
-            output_index = generated_text.find("'outputs': {'text': '")
+            output_index = generated_text.find("'outputs'")
             code_index = generated_text.find("<|assistant|>")
 
             try:
                 if output_index != -1:
-                    output_text = generated_text[output_index + len("'outputs': '") :].strip(
+                    output_text = generated_text[output_index + len("'outputs': 'text': '") :].strip(
                         "'}\""
                     )
 
