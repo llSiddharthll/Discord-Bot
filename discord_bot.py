@@ -23,7 +23,7 @@ class MyClient(discord.Client):
         print('Logged on as', self.user)
 
     async def on_message(self, message):
-        # don't respond to ourselves
+        await message.channel.trigger_typing()
         if message.author == self.user:
             return
 
