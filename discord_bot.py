@@ -29,7 +29,7 @@ class MyClient(discord.Client):
 
         if message.content:
             user_input = message.content
-            await message.channel.trigger_typing()
+            await message.channel.typing()
             output = query({
                 "inputs": {
                     "text": user_input
