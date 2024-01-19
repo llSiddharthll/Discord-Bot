@@ -23,12 +23,13 @@ class MyClient(discord.Client):
         print('Logged on as', self.user)
 
     async def on_message(self, message):
-        await message.channel.trigger_typing()
+        
         if message.author == self.user:
             return
 
         if message.content:
             user_input = message.content
+            await message.channel.trigger_typing()
             output = query({
                 "inputs": {
                     "text": user_input
