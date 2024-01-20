@@ -1,7 +1,6 @@
 import discord
 import requests
 import os
-import asyncio
 
 API_URL = "https://api-inference.huggingface.co/models/TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 headers = {"Authorization": "Bearer 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"}
@@ -31,40 +30,35 @@ class MyClient(discord.Client):
         if message.content:
             user_input = message.content
             if user_input.lower().startswith(("itachi", "/bro", "bro","jade","bot")):
-                async def send_typing_events():
-                    while True:
-                        await message.channel.typing()
-                        await asyncio.sleep(1)  # Delay between typing events
-
-                asyncio.create_task(send_typing_events())
-                output = query({
-                    "inputs": {
-                        "text": user_input
-                    },
-                })
-                try:
-                    generated_text = output[0]["generated_text"]
-                except:
-                    generated_text = output
-                try:
-                    output_index = generated_text.find("'outputs'")
-                except:
+                async with message.channel.typing():
+                    output = query({
+                        "inputs": {
+                            "text": user_input
+                        },
+                    })
                     try:
-                        output_index = generated_text.find("<|assistant|>")
+                        generated_text = output[0]["generated_text"]
                     except:
-                        output_index = generated_text
+                        generated_text = output
+                    try:
+                        output_index = generated_text.find("'outputs'")
+                    except:
+                        try:
+                            output_index = generated_text.find("<|assistant|>")
+                        except:
+                            output_index = generated_text
 
-                try:
-                    if output_index != -1:
-                        output_text = generated_text[output_index + len("'outputs': 'text': '") :].strip(
-                            "'}\""
-                        )
+                    try:
+                        if output_index != -1:
+                            output_text = generated_text[output_index + len("'outputs': 'text': '") :].strip(
+                                "'}\""
+                            )
 
-                    else:
-                        output_text = generated_text[output_index + len("<|assistant|>") :]
-                except:
-                    output_text = "Sorry! ask me something else please"
-                await message.channel.send(output_text)
+                        else:
+                            output_text = generated_text[output_index + len("<|assistant|>") :]
+                    except:
+                        output_text = "Sorry! ask me something else please"
+                    await message.channel.send(output_text)
 
 intents = discord.Intents.default()
 intents.message_content = True
