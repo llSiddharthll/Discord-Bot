@@ -40,8 +40,13 @@ class MyClient(discord.Client):
                     generated_text = output[0]["generated_text"]
                 except:
                     generated_text = output
-                output_index = generated_text.find("'outputs'")
-                code_index = generated_text.find("<|assistant|>")
+                try:
+                    output_index = generated_text.find("'outputs'")
+                except:
+                    try:
+                        output_index = generated_text.find("<|assistant|>")
+                    except:
+                        output_index = generated_text
 
                 try:
                     if output_index != -1:
@@ -50,7 +55,7 @@ class MyClient(discord.Client):
                         )
 
                     else:
-                        output_text = generated_text[code_index + len("<|assistant|>") :]
+                        output_text = generated_text[output_index + len("<|assistant|>") :]
                 except:
                     output_text = "Sorry! ask me something else please"
                 await message.channel.send(output_text)
