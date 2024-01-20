@@ -1,6 +1,7 @@
 import discord
 import requests
 import os
+import asyncio
 
 API_URL = "https://api-inference.huggingface.co/models/TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 headers = {"Authorization": "Bearer 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"}
@@ -30,7 +31,12 @@ class MyClient(discord.Client):
         if message.content:
             user_input = message.content
             if user_input.lower().startswith(("itachi", "/bro", "bro","jade","bot")):
-                await message.channel.typing()
+                async def send_typing_events():
+                    while True:
+                        await message.channel.typing()
+                        await asyncio.sleep(1)  # Delay between typing events
+
+                asyncio.create_task(send_typing_events())
                 output = query({
                     "inputs": {
                         "text": user_input
