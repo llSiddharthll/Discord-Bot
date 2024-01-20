@@ -65,7 +65,7 @@ class MyClient(discord.Client):
                             output_text = generated_text[output_index + len("<|assistant|>") :]
                     except:
                         output_text = generated_text
-                    await message.channel.send(output_text)
+                    await message.channel.send(f"{message.author.mention}, here's your generated image:",output_text)
             
                 if user_input.lower().startswith(("generate", "make")):
                     async with message.channel.typing():
