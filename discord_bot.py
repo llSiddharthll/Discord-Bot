@@ -29,30 +29,31 @@ class MyClient(discord.Client):
 
         if message.content:
             user_input = message.content
-            await message.channel.typing()
-            output = query({
-                "inputs": {
-                    "text": user_input
-                },
-            })
-            try:
-                generated_text = output[0]["generated_text"]
-            except:
-                generated_text = output
-            output_index = generated_text.find("'outputs'")
-            code_index = generated_text.find("<|assistant|>")
+            if user_input.lower().startswith(("itachi", "/bro", "bro","jade","bot")):
+                await message.channel.typing()
+                output = query({
+                    "inputs": {
+                        "text": user_input
+                    },
+                })
+                try:
+                    generated_text = output[0]["generated_text"]
+                except:
+                    generated_text = output
+                output_index = generated_text.find("'outputs'")
+                code_index = generated_text.find("<|assistant|>")
 
-            try:
-                if output_index != -1:
-                    output_text = generated_text[output_index + len("'outputs': 'text': '") :].strip(
-                        "'}\""
-                    )
+                try:
+                    if output_index != -1:
+                        output_text = generated_text[output_index + len("'outputs': 'text': '") :].strip(
+                            "'}\""
+                        )
 
-                else:
-                    output_text = generated_text[code_index + len("<|assistant|>") :]
-            except:
-                output_text = "Sorry! ask me something else please"
-        await message.channel.send(output_text)
+                    else:
+                        output_text = generated_text[code_index + len("<|assistant|>") :]
+                except:
+                    output_text = "Sorry! ask me something else please"
+            await message.channel.send(output_text)
 
 intents = discord.Intents.default()
 intents.message_content = True
