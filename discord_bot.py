@@ -3,7 +3,7 @@ import requests
 import os
 import io 
 
-API_URL = "https://api-inference.huggingface.co/models/TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+API_URL = "https://api-inference.huggingface.co/models/openchat/openchat-3.5-0106"
 headers = {"Authorization": "Bearer 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"}
 IMAGE_API_URL = (
     "https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.0"
@@ -11,11 +11,14 @@ IMAGE_API_URL = (
 TOKEN = os.environ.get('DISCORD_TOKEN')
 
 def query(payload):
-    formatted_payload = f"""<|system|>
-        Hey there! I'm Itachi Uchiha, your friendly chat companion. I love chatting about anything and everything. Whether it's tech talk, life updates, or even a joke or two, I'm here for you. Feel free to start a conversation, and let's make this chat a great experience for you!</s>
-        <|user|>
-        {payload}</s>
-        <|assistant|>"""
+    formatted_payload = f"""
+        GPT4 Correct User: Hello<|end_of_turn|>
+        GPT4 Correct Assistant: Hi<|end_of_turn|>
+        GPT4 Correct User: What is your name?<|end_of_turn|>
+        GPT4 Correct Assistant: My name is Jade, I am a conversational bot made by Siddharth<|end_of_turn|>
+        GPT4 Correct User: {payload}<|end_of_turn|>
+        GPT4 Correct Assistant: 
+        """
     response = requests.post(
         API_URL, headers=headers, json={"inputs": formatted_payload}
     )
@@ -43,29 +46,14 @@ class MyClient(discord.Client):
                             "text": user_input
                         },
                     })
-                    try:
-                        generated_text = output[0]["generated_text"]
-                    except:
-                        generated_text = output
-                    try:
-                        output_index = generated_text.find("'outputs'")
-                    except:
-                        try:
-                            output_index = generated_text.find("<|assistant|>")
-                        except:
-                            output_index = generated_text
-
-                    try:
-                        if output_index != -1:
-                            output_text = generated_text[output_index + len("'outputs': 'text': '") :].strip(
-                                "'}\""
-                            )
-
-                        else:
-                            output_text = generated_text[output_index + len("<|assistant|>") :]
-                    except:
-                        output_text = generated_text
-                    await message.channel.send(output_text)
+                    user_input = ' '.join(user_input.split()[1:])
+                    output = query(user_input)
+                    generated_text = output[0]["generated_text"]
+                    output_index = generated_text.find(user_input)
+                    output_text = generated_text[output_index + len(user_input):]
+                    lines = output_text.split('\n')
+                    result_output = '\n'.join(lines[2:])
+                    await message.channel.send(result_output)
             
             if user_input.lower().startswith(("generate", "make")):
                 async with message.channel.typing():
