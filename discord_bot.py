@@ -76,8 +76,6 @@ class MyClient(discord.Client):
                         await message.channel.send(f"{message.author.mention}, here's your generated image:",file=discord.File(image, 'image.jpg'))
                     except Exception as e:
                         print(f"Error sending image: {e}")
-                    finally:
-                        image.close()
 
 intents = discord.Intents.default()
 intents.message_content = True
