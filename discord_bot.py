@@ -1,10 +1,13 @@
 import discord
 import requests
 import os
+import io 
 
 API_URL = "https://api-inference.huggingface.co/models/TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 headers = {"Authorization": "Bearer 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"}
-
+IMAGE_API_URL = (
+    "https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.0"
+)
 TOKEN = os.environ.get('DISCORD_TOKEN')
 
 def query(payload):
@@ -18,6 +21,10 @@ def query(payload):
     )
     return response.json()
 	
+def query_image(payload):
+    response = requests.post(IMAGE_API_URL, headers=headers, json=payload)
+    return response.content
+
 class MyClient(discord.Client):
     async def on_ready(self):
         print('Logged on as', self.user)
@@ -59,6 +66,18 @@ class MyClient(discord.Client):
                     except:
                         output_text = generated_text
                     await message.channel.send(output_text)
+            
+                if user_input.lower().startswith(("generate", "make")):
+                    async with message.channel.typing():
+                        image_bytes = query_image({"inputs": user_input})  
+                        image = io.BytesIO(image_bytes)
+                        image.seek(0)
+                        try:
+                            await message.channel.send(f"{message.author.mention}, here's your generated image:",file=discord.File(image, 'image.jpg'))
+                        except Exception as e:
+                            print(f"Error sending image: {e}")
+                        finally:
+                            image.close()
 
 intents = discord.Intents.default()
 intents.message_content = True
