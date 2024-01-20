@@ -57,7 +57,7 @@ class MyClient(discord.Client):
                         else:
                             output_text = generated_text[output_index + len("<|assistant|>") :]
                     except:
-                        output_text = "Sorry! ask me something else please"
+                        output_text = generated_text
                     await message.channel.send(output_text)
 
 intents = discord.Intents.default()
