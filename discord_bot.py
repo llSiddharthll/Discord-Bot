@@ -67,17 +67,17 @@ class MyClient(discord.Client):
                         output_text = generated_text
                     await message.channel.send(f"{message.author.mention}, here's your generated image:",output_text)
             
-                if user_input.lower().startswith(("generate", "make")):
-                    async with message.channel.typing():
-                        image_bytes = query_image({"inputs": user_input})  
-                        image = io.BytesIO(image_bytes)
-                        image.seek(0)
-                        try:
-                            await message.channel.send(f"{message.author.mention}, here's your generated image:",file=discord.File(image, 'image.jpg'))
-                        except Exception as e:
-                            print(f"Error sending image: {e}")
-                        finally:
-                            image.close()
+            if user_input.lower().startswith(("generate", "make")):
+                async with message.channel.typing():
+                    image_bytes = query_image({"inputs": user_input})  
+                    image = io.BytesIO(image_bytes)
+                    image.seek(0)
+                    try:
+                        await message.channel.send(f"{message.author.mention}, here's your generated image:",file=discord.File(image, 'image.jpg'))
+                    except Exception as e:
+                        print(f"Error sending image: {e}")
+                    finally:
+                        image.close()
 
 intents = discord.Intents.default()
 intents.message_content = True
