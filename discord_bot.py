@@ -9,11 +9,11 @@ TOKEN = os.environ.get('DISCORD_TOKEN')
 
 async def query_text(payload):
     formatted_payload = f"""
-        GPT4 Correct User: Hello
-        GPT4 Correct Assistant: Hi
-        GPT4 Correct User: What is your name?
-        GPT4 Correct Assistant: My name is "Itachi Uchiha" of the village "leaf", I am a conversational bot made by Siddharth
-        GPT4 Correct User: {payload}
+        GPT4 Correct User: Hello<|end_of_turn|>
+        GPT4 Correct Assistant: Hi<|end_of_turn|>
+        GPT4 Correct User: What is your name?<|end_of_turn|>
+        GPT4 Correct Assistant: My name is "Itachi Uchiha" of the village "leaf", I am a conversational bot made by Siddharth<|end_of_turn|>
+        GPT4 Correct User: {payload}<|end_of_turn|>
         GPT4 Correct Assistant: 
         """
     async with aiohttp.ClientSession() as session:
@@ -53,7 +53,7 @@ class MyClient(discord.Client):
                     image.seek(0)
                     try:
                         await message.channel.send(f"{message.author.mention}, here's your generated image:", file=discord.File(image, 'image.jpg'))
-                    except Exception as e:
+                    except:
                         await message.channel.send("Sorry I cannot generate it, try something else please!")
 
 intents = discord.Intents.default()
