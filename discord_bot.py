@@ -4,7 +4,7 @@ import os
 import io
 
 API_URL = "https://api-inference.huggingface.co/models/openchat/openchat-3.5-0106"
-IMAGE_API_URL = "https://api-inference.huggingface.co/models/dataautogpt3/ProteusV0.1"
+IMAGE_API_URL = "https://api-inference.huggingface.co/models/segmind/SSD-1B"
 TOKEN = os.environ.get('DISCORD_TOKEN')
 
 async def query_text(payload):
