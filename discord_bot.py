@@ -1,13 +1,14 @@
 import discord
-import aiohttp
+import requests
 import os
 import io
 
 API_URL = "https://api-inference.huggingface.co/models/openchat/openchat-3.5-0106"
 IMAGE_API_URL = "https://api-inference.huggingface.co/models/segmind/Segmind-Vega"
+headers = {"Authorization": "Bearer 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"}
 TOKEN = os.environ.get('DISCORD_TOKEN')
 
-async def query_text(payload):
+def query(payload):
     formatted_payload = f"""
         GPT4 Correct User: Hello<|end_of_turn|>
         GPT4 Correct Assistant: Hi<|end_of_turn|>
@@ -16,14 +17,14 @@ async def query_text(payload):
         GPT4 Correct User: {payload}<|end_of_turn|>
         GPT4 Correct Assistant: 
         """
-    async with aiohttp.ClientSession() as session:
-        async with session.post(API_URL, headers={"Authorization": "Bearer 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"}, json={"inputs": formatted_payload}) as response:
-            return await response.json()
-
-async def query_image(payload):
-    async with aiohttp.ClientSession() as session:
-        async with session.post(IMAGE_API_URL, headers={"Authorization": "Bearer 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"}, json=payload) as response:
-            return await response.read()
+    response = requests.post(
+        API_URL, headers=headers, json={"inputs": formatted_payload}
+    )
+    return response.json()
+	
+def query_image(payload):
+    response = requests.post(IMAGE_API_URL, headers=headers, json=payload)
+    return response.content
 
 class MyClient(discord.Client):
     async def on_ready(self):
