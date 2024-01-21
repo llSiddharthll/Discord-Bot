@@ -49,7 +49,7 @@ class MyClient(discord.Client):
 
             elif user_input.startswith(("generate", "make")):
                 async with message.channel.typing():
-                    image_bytes = await query_image({"inputs": user_input})
+                    image_bytes = query_image({"inputs": user_input})
                     image = io.BytesIO(image_bytes)
                     image.seek(0)
                     try:
