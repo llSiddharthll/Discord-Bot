@@ -39,7 +39,7 @@ class MyClient(discord.Client):
 
             if user_input.startswith(("itachi", "/bro", "bro", "jade", "bot")):
                 async with message.channel.typing():
-                    output = await query_text(user_input)
+                    output = query(user_input)
                     generated_text = output[0]["generated_text"]
                     output_index = generated_text.find(user_input)
                     output_text = generated_text[output_index + len(user_input):]
