@@ -6,7 +6,7 @@ import io
 API_URL = "https://api-inference.huggingface.co/models/openchat/openchat-3.5-0106"
 headers = {"Authorization": "Bearer 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"}
 IMAGE_API_URL = (
-    "https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.0"
+    "https://api-inference.huggingface.co/models/dataautogpt3/ProteusV0.1"
 )
 TOKEN = os.environ.get('DISCORD_TOKEN')
 
