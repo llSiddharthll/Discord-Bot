@@ -52,10 +52,10 @@ class MyClient(discord.Client):
                     image_bytes = query_image({"inputs": user_input})
                     image = io.BytesIO(image_bytes)
                     image.seek(0)
-                    if image:
+                    try:
                         await message.channel.send(f"{message.author.mention}, here's your generated image:", file=discord.File(image, 'image.jpg'))
-                    else:
-                        await message.channel.send("Sorry, I am loading the image generative model, kindly try to use it after 1 min.")
+                    except:
+                        await message.channel.send("Sorry I cannot generate it, try something else please!")
 
 intents = discord.Intents.default()
 intents.message_content = True
