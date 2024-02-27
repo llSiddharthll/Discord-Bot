@@ -13,7 +13,7 @@ def query(payload):
     {payload}<end_of_turn>
     <start_of_turn>model \n
     '''
-    response = requests.post(API_URL, headers=headers, json=formatted_payload)
+    response = requests.post(API_URL, headers=headers, json={'inputs': formatted_payload})
     return response.json()
 	
 
