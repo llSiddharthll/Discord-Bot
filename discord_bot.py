@@ -2,59 +2,18 @@ import discord
 import requests
 import os
 import io
-import click
-from requests import get
-from uuid import uuid4
-from re import findall
-from curl_cffi.requests import get, RequestsError
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
-class youChat:
-    def create(self, prompt):
-        resp = get(
-            "https://you.com/api/streamingSearch",
-            headers={
-                "cache-control": "no-cache",
-                "referer": "https://you.com/search?q=gpt4&tbm=youchat",
-                "cookie": f"safesearch_guest=Off; uuid_guest={str(uuid4())}",
-            },
-            params={
-                "q": prompt,
-                "page": 1,
-                "count": 10,
-                "safeSearch": "Off",
-                "onShoppingPage": False,
-                "mkt": "",
-                "responseFilter": "WebPages,Translations,TimeZone,Computation,RelatedSearches",
-                "domain": "youchat",
-                "queryTraceId": str(uuid4()),
-                "chat": [],
-            },
-            impersonate="chrome107",
-        )
-        if "youChatToken" not in resp.text:
-            raise RequestsError("Unable to fetch the response.")
-        return (
-            "".join(
-                findall(
-                    r"{\"youChatToken\": \"(.*?)\"}",
-                    resp.content.decode("unicode-escape"),
-                )
-            )
-            .replace("\\n", "\n")
-            .replace("\\\\", "\\")
-            .replace('\\"', '"')
-        )
+def chatTalk(prompt):
+    tokenizer = AutoTokenizer.from_pretrained("google/gemma-2b")
+    model = AutoModelForCausalLM.from_pretrained("google/gemma-2b")
 
-    @staticmethod
-    def chat_cli(prompt):
-        """Generate completion based on the provided prompt"""
-        you_chat = youChat()
-        completion = you_chat.create(prompt)
-        print(completion)
-        
-@click.option('--prompt', prompt='Enter your prompt', help='The prompt to generate a completion from.')
-def youchat(prompt):
-    youChat.chat_cli(prompt)
+    input_text = f"{prompt}."
+    input_ids = tokenizer(input_text, return_tensors="pt")
+
+    outputs = model.generate(**input_ids)
+    
+    return tokenizer.decode(outputs[0])
 
 API_URL = "https://api-inference.huggingface.co/models/openchat/openchat-3.5-0106"
 IMAGE_API_URL = "https://api-inference.huggingface.co/models/segmind/Segmind-Vega"
@@ -79,7 +38,7 @@ class MyClient(discord.Client):
 
             if user_input.startswith(("itachi", "/bro", "bro", "jade", "bot")):
                 async with message.channel.typing():
-                    output = youchat(user_input)
+                    output = chatTalk(user_input)
                     await message.channel.send(output)
 
             elif user_input.startswith(("generate", "make")):
