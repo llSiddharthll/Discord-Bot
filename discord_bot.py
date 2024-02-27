@@ -9,9 +9,9 @@ headers = {"Authorization": "Bearer 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"}
 
 def query(payload):
     formatted_payload = f'''
-    <start_of_turn>user \n
+    <start_of_turn>user:
     {payload}<end_of_turn>
-    <start_of_turn>model \n
+    <start_of_turn>model:
     '''
     response = requests.post(API_URL, headers=headers, json={'inputs': formatted_payload})
     return response.json()
