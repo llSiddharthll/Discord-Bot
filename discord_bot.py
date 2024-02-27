@@ -8,10 +8,7 @@ API_URL = "https://api-inference.huggingface.co/models/google/gemma-2b-it"
 headers = {"Authorization": "Bearer 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"}
 
 def query(payload):
-    formatted_payload = f'''
-    {payload}.
-    '''
-    response = requests.post(API_URL, headers=headers, json={'inputs': formatted_payload})
+    response = requests.post(API_URL, headers=headers, json={'inputs': f"{payload}?\n"})
     return response.json()
 	
 
@@ -38,7 +35,9 @@ class MyClient(discord.Client):
 
             if user_input.startswith(("itachi", "/bro", "bro", "jade", "bot")):
                 async with message.channel.typing():
-                    output = query(user_input)
+                    words = user_input.split()
+                    new_sentence = ' '.join(words[1:])
+                    output = query(new_sentence)
                     await message.channel.send(output[0]['generated_text'])
 
             elif user_input.startswith(("generate", "make")):
