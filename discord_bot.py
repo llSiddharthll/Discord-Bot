@@ -10,6 +10,10 @@ headers = {"Authorization": "Bearer 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"}
 def query(payload):
     formatted_payload = f'''
     <start_of_turn>user:
+    Hello<end_of_turn>
+    <start_of_turn>model:
+    Hey, how are you ?<end_of_turn>
+    <start_of_turn>user:
     {payload}<end_of_turn>
     <start_of_turn>model:
     '''
@@ -41,7 +45,7 @@ class MyClient(discord.Client):
             if user_input.startswith(("itachi", "/bro", "bro", "jade", "bot")):
                 async with message.channel.typing():
                     output = query(user_input)
-                    await message.channel.send(output)
+                    await message.channel.send(output[0]['generated_text'])
 
             elif user_input.startswith(("generate", "make")):
                 async with message.channel.typing():
