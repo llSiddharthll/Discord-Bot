@@ -30,7 +30,7 @@ class MyClient(discord.Client):
 
             if user_input.startswith(("itachi", "/bro", "bro", "jade", "bot")):
                 async with message.channel.typing():
-                    prompt = input(user_input)
+                    prompt = str(user_input)
                     output = youChat.create(prompt)
                     await message.channel.send(output)
 
