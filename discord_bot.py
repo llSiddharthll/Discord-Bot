@@ -4,7 +4,7 @@ import os
 import io
 
 
-API_URL = "https://api-inference.huggingface.co/models/microsoft/phi-2"
+API_URL = "https://api-inference.huggingface.co/models/NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO"
 headers = {"Authorization": "Bearer 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"}
 
 def query(payload):
