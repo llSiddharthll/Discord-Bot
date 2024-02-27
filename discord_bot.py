@@ -2,19 +2,20 @@ import discord
 import requests
 import os
 import io
-from transformers import AutoTokenizer, AutoModelForCausalLM
 
-access_token = "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"
 
-def chatTalk(prompt):
-    tokenizer = AutoTokenizer.from_pretrained("google/gemma-2b", token=access_token)
-    model = AutoModelForCausalLM.from_pretrained("google/gemma-2b", token=access_token)
+API_URL = "https://api-inference.huggingface.co/models/google/gemma-2b-it"
+headers = {"Authorization": "Bearer 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"}
 
-    input_text = f"{prompt}."
-    input_ids = tokenizer(input_text, return_tensors="pt")
-
-    outputs = model.generate(**input_ids)
-    return tokenizer.decode(outputs[0])
+def query(payload):
+    formatted_payload = f'''
+    <start_of_turn>user \n
+    {payload}<end_of_turn>
+    <start_of_turn>model \n
+    '''
+    response = requests.post(API_URL, headers=headers, json=formatted_payload)
+    return response.json()
+	
 
 API_URL = "https://api-inference.huggingface.co/models/openchat/openchat-3.5-0106"
 IMAGE_API_URL = "https://api-inference.huggingface.co/models/segmind/Segmind-Vega"
@@ -39,7 +40,7 @@ class MyClient(discord.Client):
 
             if user_input.startswith(("itachi", "/bro", "bro", "jade", "bot")):
                 async with message.channel.typing():
-                    output = chatTalk(user_input)
+                    output = query(user_input)
                     await message.channel.send(output)
 
             elif user_input.startswith(("generate", "make")):
