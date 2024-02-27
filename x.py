@@ -1,8 +1,9 @@
 import requests
+import os
 
 def GeminiChat(prompt):
     # Replace "YOUR_API_KEY" with your actual API key
-    API_KEY = "AIzaSyB38xndnMqkV6P8f2u7l9bcFBxjpWksjkA"
+    API_KEY = os.environ.get("Gemini_Key")
 
     # Define the request data
     data = {
