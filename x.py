@@ -1,30 +1,35 @@
 import requests
-from bs4 import BeautifulSoup
 
-def fetch_ai_content_with_bs4(url, prompt):
-    # Set up the payload data
-    payload = {
-        "chat-input": prompt,
-        # Add any other required parameters here
+def GeminiChat(prompt):
+    # Replace "YOUR_API_KEY" with your actual API key
+    API_KEY = "AIzaSyB38xndnMqkV6P8f2u7l9bcFBxjpWksjkA"
+
+    # Define the request data
+    data = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [{"text": prompt}],
+            }
+        ]
     }
 
-    # Make a POST request to the URL
-    response = requests.post(url, data=payload)
+    # Set the request headers
+    headers = {"Content-Type": "application/json"}
 
-    # Parse the HTML content with BeautifulSoup
-    soup = BeautifulSoup(response.text, "html.parser")
+    # Construct the API endpoint URL with the API key
+    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key={API_KEY}"
 
-    # Find the element containing the AI-generated content
-    result_element = soup.find("div", class_="wpaicg-ai-message")
+    # Send the POST request
+    response = requests.post(url, headers=headers, json=data)
 
-    # Get the text content of the element
-    result = result_element.text.strip() if result_element else "Result not found"
-
-    return result
-
-# Example usage:
-url = "https://chatgptt.me/"
-prompt = "hello"
-
-result = fetch_ai_content_with_bs4(url, prompt)
-print(result)
+    # Check for successful response
+    if response.status_code == 200:
+    # Parse the JSON response
+        response_data = response.json()
+        generated_text = response_data["candidates"][0]['content']['parts'][0]['text']
+    # Access the generated text from the response
+        return generated_text
+    
+    else:
+        return {"Error" : response.status_code}
