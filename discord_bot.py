@@ -36,7 +36,7 @@ class MyClient(discord.Client):
                     words = user_input.split()
                     new_sentence = ' '.join(words[1:])
                     output = query(new_sentence)
-                    await message.channel.send(output[0]['generated_text'])
+                    await message.channel.send(output)
 
             elif user_input.startswith(("generate", "make")):
                 async with message.channel.typing():
