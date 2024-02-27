@@ -4,15 +4,16 @@ import os
 import io
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
+access_token = "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"
+
 def chatTalk(prompt):
-    tokenizer = AutoTokenizer.from_pretrained("google/gemma-2b")
-    model = AutoModelForCausalLM.from_pretrained("google/gemma-2b")
+    tokenizer = AutoTokenizer.from_pretrained("google/gemma-2b", token=access_token)
+    model = AutoModelForCausalLM.from_pretrained("google/gemma-2b", token=access_token)
 
     input_text = f"{prompt}."
     input_ids = tokenizer(input_text, return_tensors="pt")
 
     outputs = model.generate(**input_ids)
-    
     return tokenizer.decode(outputs[0])
 
 API_URL = "https://api-inference.huggingface.co/models/openchat/openchat-3.5-0106"
