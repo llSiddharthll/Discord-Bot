@@ -4,15 +4,13 @@ import os
 import io
 
 
-API_URL = "https://api-inference.huggingface.co/models/google/gemma-2b-it"
+API_URL = "https://api-inference.huggingface.co/models/google/gemma-7b-it"
 headers = {"Authorization": "Bearer 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"}
 
 def query(payload):
     response = requests.post(API_URL, headers=headers, json={'inputs': f"{payload}?\n"})
     return response.json()
-	
 
-API_URL = "https://api-inference.huggingface.co/models/openchat/openchat-3.5-0106"
 IMAGE_API_URL = "https://api-inference.huggingface.co/models/segmind/Segmind-Vega"
 headers = {"Authorization": "Bearer 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"}
 TOKEN = os.environ.get('DISCORD_TOKEN')
